@@ -11,6 +11,7 @@
 *(Berikut adalah hasil tangkapan layar dari aplikasi Onboarding Buddy System yang berjalan di browser)*
 
 > ![Screenshot Preview web](assets/preview.png)
+>  ![Screenshot Preview web](assets/preview2.png)
 
 ---
 
