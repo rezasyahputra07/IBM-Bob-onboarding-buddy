@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ============================================================
+       Onboarding Buddy — index.html
+       Features: AI Chat, 4-Step Checklist, Quick Links, Progress Bar
+       Stack: HTML5 + CSS3 + Vanilla JS only
+       Colors: Deep Blue #1E3A8A · Teal #0D9488
+  ============================================================= -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding Buddy — AI-Powered New Hire Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ====================================================
+       HEADER — sticky top bar with mini progress indicator
+  ===================================================== -->
+  <header class="header">
+
+    <!-- Logo -->
+    <div class="header-logo">
+      <div class="header-logo-icon">
+        <!-- Buddy icon — speech-bubble silhouette -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </div>
+      <span class="header-brand">Onboarding <span>Buddy</span></span>
+    </div>
+
+    <div class="header-sep"></div>
+    <span class="header-subtitle">AI-Powered New Hire Assistant</span>
+
+    <div class="header-spacer"></div>
+
+    <!-- Mini progress in header -->
+    <div class="header-progress-mini">
+      <span id="header-pct-label">0% complete</span>
+      <div class="header-bar">
+        <div class="header-bar-fill" id="header-bar-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- User avatar -->
+    <div class="header-avatar" title="Alex Johnson — New Hire">AJ</div>
+
+  </header>
+
+
+  <!-- ====================================================
+       MAIN GRID — left: chat  |  right: checklist + links
+  ===================================================== -->
+  <div class="main-grid">
+
+
+    <!-- ======================== LEFT COLUMN ======================== -->
+    <aside class="left-col">
+
+      <!-- ── SECTION 1: AI Chat Assistant ── -->
+      <div class="card chat-card" id="chat-card">
+
+        <!-- Card header -->
+        <div class="card-header">
+          <div class="card-header-icon blue">
+            <!-- Robot icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/>
+              <path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/>
+            </svg>
+          </div>
+          <div class="card-header-text">
+            <h3>AI Chat Assistant</h3>
+            <p>Ask me anything about your onboarding</p>
+          </div>
+          <span class="card-header-badge" id="chat-online-badge">● Online</span>
+        </div>
+
+        <!-- Messages thread -->
+        <div class="chat-messages" id="chat-messages">
+
+          <!-- Opening bot message (static HTML) -->
+          <div class="msg-row">
+            <div class="msg-avatar bot">B</div>
+            <div class="msg-content">
+              <div class="msg-bubble bot">
+                Hi Alex! 👋 I'm your <strong>Onboarding Buddy</strong>. I'm here to help you navigate your first days — from company policies to tools setup.<br><br>
+                What would you like to know?
+              </div>
+              <div class="msg-time">Just now</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick-ask chips -->
+        <div class="chat-chips" id="chat-chips">
+          <button class="chat-chip" onclick="sendChip(this, 'What is our company mission?')">🏢 Company mission</button>
+          <button class="chat-chip" onclick="sendChip(this, 'How do I set up my tools?')">🛠️ Tools setup</button>
+          <button class="chat-chip" onclick="sendChip(this, 'What are the core company values?')">💡 Core values</button>
+          <button class="chat-chip" onclick="sendChip(this, 'Who is my onboarding point of contact?')">🤝 My POC</button>
+          <button class="chat-chip" onclick="sendChip(this, 'When is my first performance review?')">📅 First review</button>
+        </div>
+
+        <!-- Input row -->
+        <div class="chat-input-row">
+          <textarea
+            class="chat-textarea"
+            id="chat-input"
+            placeholder="Ask your Onboarding Buddy…"
+            rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"
+          ></textarea>
+          <button class="send-btn" onclick="sendMessage()" title="Send message" aria-label="Send message">
+            <!-- Send arrow icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+      <!-- end chat-card -->
+
+    </aside>
+    <!-- end left-col -->
+
+
+    <!-- ======================== RIGHT COLUMN ======================== -->
+    <div class="right-col">
+
+      <!-- ── SECTION 4: Progress Tracker Bar ── -->
+      <div class="card progress-card">
+
+        <div class="card-header">
+          <div class="card-header-icon teal">
+            <!-- Chart icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+            </svg>
+          </div>
+          <div class="card-header-text">
+            <h3>New Hire Progress Tracker</h3>
+            <p>Your onboarding journey — 4 milestones</p>
+          </div>
+          <span class="card-header-badge" id="progress-badge">0 / 4 done</span>
+        </div>
+
+        <div class="card-body">
+
+          <!-- Milestone dots + connector -->
+          <div class="progress-milestones" id="progress-milestones">
+            <!-- Animated progress line -->
+            <div class="milestone-track" id="milestone-track" style="width:0%"></div>
+
+            <div class="milestone" id="milestone-0" data-step="0">
+              <div class="milestone-dot">
+                <!-- Checkmark SVG (hidden until done) -->
+                <svg class="check-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="dot-num">1</span>
+              </div>
+              <span class="milestone-label">Welcome &amp;<br>Intro</span>
+            </div>
+
+            <div class="milestone" id="milestone-1" data-step="1">
+              <div class="milestone-dot">
+                <svg class="check-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="dot-num">2</span>
+              </div>
+              <span class="milestone-label">Company<br>Culture</span>
+            </div>
+
+            <div class="milestone" id="milestone-2" data-step="2">
+              <div class="milestone-dot">
+                <svg class="check-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="dot-num">3</span>
+              </div>
+              <span class="milestone-label">Tools<br>Setup</span>
+            </div>
+
+            <div class="milestone" id="milestone-3" data-step="3">
+              <div class="milestone-dot">
+                <svg class="check-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <span class="dot-num">4</span>
+              </div>
+              <span class="milestone-label">First<br>Task</span>
+            </div>
+
+          </div>
+
+          <!-- Percentage + full-width bar -->
+          <div class="progress-percent-row">
+            <span>Overall Completion</span>
+            <strong id="progress-pct">0%</strong>
+          </div>
+          <div class="progress-full-bar">
+            <div class="progress-full-fill" id="progress-full-fill" style="width:0%"></div>
+          </div>
+
+        </div>
+        <!-- end card-body -->
+
+      </div>
+      <!-- end progress-card -->
+
+
+      <!-- ── SECTION 2: Interactive 4-Step Checklist ── -->
+      <div class="card checklist-card">
+
+        <div class="card-header">
+          <div class="card-header-icon blue">
+            <!-- Checklist icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 11 12 14 22 4"/>
+              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+          </div>
+          <div class="card-header-text">
+            <h3>Onboarding Checklist</h3>
+            <p>Complete all 4 steps to finish onboarding</p>
+          </div>
+        </div>
+
+        <!-- 4-step accordion list -->
+        <ul class="step-list" id="step-list">
+
+          <!-- ── STEP 1: Welcome ── -->
+          <li class="step-item active open" id="step-0" data-step-idx="0">
+            <div class="step-header" onclick="toggleStep(0)">
+              <div class="step-num">1</div>
+              <div class="step-info">
+                <div class="step-title">Welcome &amp; Introduction</div>
+                <div class="step-subtitle">Get settled and meet the team</div>
+              </div>
+              <span class="step-status-chip active" id="chip-0">In Progress</span>
+              <svg class="step-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <div class="step-tasks" id="tasks-0">
+              <ul class="task-list">
+                <li class="task-item" id="task-0-0">
+                  <input type="checkbox" id="chk-0-0" onchange="onTaskChange(0,0,this)" />
+                  <label class="task-label" for="chk-0-0">Attend new hire orientation session</label>
+                </li>
+                <li class="task-item" id="task-0-1">
+                  <input type="checkbox" id="chk-0-1" onchange="onTaskChange(0,1,this)" />
+                  <label class="task-label" for="chk-0-1">Read your welcome letter from the CEO</label>
+                </li>
+                <li class="task-item" id="task-0-2">
+                  <input type="checkbox" id="chk-0-2" onchange="onTaskChange(0,2,this)" />
+                  <label class="task-label" for="chk-0-2">Schedule 1-on-1 with your direct manager</label>
+                </li>
+                <li class="task-item" id="task-0-3">
+                  <input type="checkbox" id="chk-0-3" onchange="onTaskChange(0,3,this)" />
+                  <label class="task-label" for="chk-0-3">Join company Slack &amp; introduce yourself</label>
+                </li>
+              </ul>
+              <div class="step-cta">
+                <button class="btn-complete-step" id="btn-step-0" onclick="completeStep(0)" disabled>
+                  Mark Step Complete ✓
+                </button>
+              </div>
+            </div>
+          </li>
+
+          <!-- ── STEP 2: Company Culture ── -->
+          <li class="step-item" id="step-1" data-step-idx="1">
+            <div class="step-header" onclick="toggleStep(1)">
+              <div class="step-num">2</div>
+              <div class="step-info">
+                <div class="step-title">Company Culture</div>
+                <div class="step-subtitle">Understand our values &amp; mission</div>
+              </div>
+              <span class="step-status-chip pending" id="chip-1">Pending</span>
+              <svg class="step-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <div class="step-tasks" id="tasks-1">
+              <ul class="task-list">
+                <li class="task-item" id="task-1-0">
+                  <input type="checkbox" id="chk-1-0" onchange="onTaskChange(1,0,this)" />
+                  <label class="task-label" for="chk-1-0">Watch the company culture &amp; values video (15 min)</label>
+                </li>
+                <li class="task-item" id="task-1-1">
+                  <input type="checkbox" id="chk-1-1" onchange="onTaskChange(1,1,this)" />
+                  <label class="task-label" for="chk-1-1">Complete the Code of Conduct e-learning module</label>
+                </li>
+                <li class="task-item" id="task-1-2">
+                  <input type="checkbox" id="chk-1-2" onchange="onTaskChange(1,2,this)" />
+                  <label class="task-label" for="chk-1-2">Read the DEI &amp; inclusion handbook</label>
+                </li>
+                <li class="task-item" id="task-1-3">
+                  <input type="checkbox" id="chk-1-3" onchange="onTaskChange(1,3,this)" />
+                  <label class="task-label" for="chk-1-3">Attend the culture Q&amp;A session with HR</label>
+                </li>
+              </ul>
+              <div class="step-cta">
+                <button class="btn-complete-step" id="btn-step-1" onclick="completeStep(1)" disabled>
+                  Mark Step Complete ✓
+                </button>
+              </div>
+            </div>
+          </li>
+
+          <!-- ── STEP 3: Tools Setup ── -->
+          <li class="step-item" id="step-2" data-step-idx="2">
+            <div class="step-header" onclick="toggleStep(2)">
+              <div class="step-num">3</div>
+              <div class="step-info">
+                <div class="step-title">Tools Setup</div>
+                <div class="step-subtitle">Configure your developer environment</div>
+              </div>
+              <span class="step-status-chip pending" id="chip-2">Pending</span>
+              <svg class="step-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <div class="step-tasks" id="tasks-2">
+              <ul class="task-list">
+                <li class="task-item" id="task-2-0">
+                  <input type="checkbox" id="chk-2-0" onchange="onTaskChange(2,0,this)" />
+                  <label class="task-label" for="chk-2-0">Set up email, Slack &amp; calendar accounts</label>
+                </li>
+                <li class="task-item" id="task-2-1">
+                  <input type="checkbox" id="chk-2-1" onchange="onTaskChange(2,1,this)" />
+                  <label class="task-label" for="chk-2-1">Install required dev tools (IDE, Git, Node, Docker)</label>
+                </li>
+                <li class="task-item" id="task-2-2">
+                  <input type="checkbox" id="chk-2-2" onchange="onTaskChange(2,2,this)" />
+                  <label class="task-label" for="chk-2-2">Clone main repository &amp; run locally</label>
+                </li>
+                <li class="task-item" id="task-2-3">
+                  <input type="checkbox" id="chk-2-3" onchange="onTaskChange(2,3,this)" />
+                  <label class="task-label" for="chk-2-3">Enable MFA on all company accounts</label>
+                </li>
+              </ul>
+              <div class="step-cta">
+                <button class="btn-complete-step" id="btn-step-2" onclick="completeStep(2)" disabled>
+                  Mark Step Complete ✓
+                </button>
+              </div>
+            </div>
+          </li>
+
+          <!-- ── STEP 4: First Task ── -->
+          <li class="step-item" id="step-3" data-step-idx="3">
+            <div class="step-header" onclick="toggleStep(3)">
+              <div class="step-num">4</div>
+              <div class="step-info">
+                <div class="step-title">First Task</div>
+                <div class="step-subtitle">Make your first contribution</div>
+              </div>
+              <span class="step-status-chip pending" id="chip-3">Pending</span>
+              <svg class="step-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+            <div class="step-tasks" id="tasks-3">
+              <ul class="task-list">
+                <li class="task-item" id="task-3-0">
+                  <input type="checkbox" id="chk-3-0" onchange="onTaskChange(3,0,this)" />
+                  <label class="task-label" for="chk-3-0">Review your first assigned ticket / user story</label>
+                </li>
+                <li class="task-item" id="task-3-1">
+                  <input type="checkbox" id="chk-3-1" onchange="onTaskChange(3,1,this)" />
+                  <label class="task-label" for="chk-3-1">Pair-program with a senior team member</label>
+                </li>
+                <li class="task-item" id="task-3-2">
+                  <input type="checkbox" id="chk-3-2" onchange="onTaskChange(3,2,this)" />
+                  <label class="task-label" for="chk-3-2">Submit your first pull request for review</label>
+                </li>
+                <li class="task-item" id="task-3-3">
+                  <input type="checkbox" id="chk-3-3" onchange="onTaskChange(3,3,this)" />
+                  <label class="task-label" for="chk-3-3">Complete your 30-day check-in with manager</label>
+                </li>
+              </ul>
+              <div class="step-cta">
+                <button class="btn-complete-step" id="btn-step-3" onclick="completeStep(3)" disabled>
+                  Mark Step Complete ✓
+                </button>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+        <!-- end step-list -->
+
+      </div>
+      <!-- end checklist-card -->
+
+
+      <!-- ── SECTION 3: Quick Links Panel ── -->
+      <div class="card">
+
+        <div class="card-header">
+          <div class="card-header-icon orange">
+            <!-- Link icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <div class="card-header-text">
+            <h3>Quick Links</h3>
+            <p>Vital resources &amp; documentation</p>
+          </div>
+        </div>
+
+        <div class="links-grid">
+
+          <a class="link-card" href="#" onclick="return false;" title="Employee Handbook">
+            <div class="link-icon blue">📖</div>
+            <div class="link-body">
+              <div class="link-title">Employee Handbook</div>
+              <div class="link-desc">Policies, benefits &amp; culture</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="IT Setup Guide">
+            <div class="link-icon teal">💻</div>
+            <div class="link-body">
+              <div class="link-title">IT Setup Guide</div>
+              <div class="link-desc">Software &amp; accounts setup</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="Org Chart">
+            <div class="link-icon blue">🏢</div>
+            <div class="link-body">
+              <div class="link-title">Org Chart</div>
+              <div class="link-desc">Team structure &amp; reporting</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="Benefits Portal">
+            <div class="link-icon green">🏥</div>
+            <div class="link-body">
+              <div class="link-title">Benefits Portal</div>
+              <div class="link-desc">Health, dental &amp; more</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="Engineering Wiki">
+            <div class="link-icon teal">🔧</div>
+            <div class="link-body">
+              <div class="link-title">Engineering Wiki</div>
+              <div class="link-desc">Architecture &amp; runbooks</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="Learning Platform">
+            <div class="link-icon orange">🎓</div>
+            <div class="link-body">
+              <div class="link-title">Learning Platform</div>
+              <div class="link-desc">Courses &amp; certifications</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="HR Self-Service">
+            <div class="link-icon blue">🙋</div>
+            <div class="link-body">
+              <div class="link-title">HR Self-Service</div>
+              <div class="link-desc">Payroll, leave &amp; forms</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+          <a class="link-card" href="#" onclick="return false;" title="Security &amp; Compliance">
+            <div class="link-icon green">🔐</div>
+            <div class="link-body">
+              <div class="link-title">Security &amp; Compliance</div>
+              <div class="link-desc">Policies &amp; best practices</div>
+            </div>
+            <svg class="link-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+
+        </div>
+        <!-- end links-grid -->
+
+      </div>
+      <!-- end quick-links card -->
+
+    </div>
+    <!-- end right-col -->
+
+  </div>
+  <!-- end main-grid -->
+
+</div>
+<!-- end app -->
+
+
+<!-- ============================================================
+     JAVASCRIPT — Chat AI engine + Checklist logic + Progress sync
+============================================================= -->
+<script>
+/* ================================================================
+   1. CHAT ASSISTANT ENGINE
+================================================================ */
+
+/**
+ * Keyword-intent map → response strings
+ * Each key is a pattern group; the first match wins.
+ */
+const BOT_RESPONSES = {
+  mission: {
+    patterns: ['mission', 'purpose', 'goal', 'vision'],
+    reply: `Our company mission is to <strong>build technology that empowers people and communities to thrive</strong>. 🚀<br><br>We do this through:<br>• <strong>Innovation</strong> — pushing boundaries every day<br>• <strong>Inclusivity</strong> — building for everyone<br>• <strong>Integrity</strong> — always acting with transparency and trust`
+  },
+  values: {
+    patterns: ['value', 'culture', 'principle', 'belief', 'ethos'],
+    reply: `Our <strong>5 Core Values</strong> are:<br><br>🤝 <strong>Collaboration</strong> — We win together<br>💡 <strong>Innovation</strong> — Curiosity drives us<br>🌍 <strong>Inclusion</strong> — Every voice matters<br>🏆 <strong>Excellence</strong> — We raise the bar<br>🔒 <strong>Integrity</strong> — We do the right thing`
+  },
+  tools: {
+    patterns: ['tool', 'setup', 'software', 'install', 'git', 'slack', 'ide', 'environment', 'dev'],
+    reply: `Here are the <strong>essential tools</strong> to set up on Day 1:<br><br>💬 <strong>Slack</strong> — Team communication<br>🐙 <strong>GitHub Enterprise</strong> — Code repos<br>✏️ <strong>VS Code / IntelliJ</strong> — IDE of choice<br>🐳 <strong>Docker</strong> — Container runtime<br>📋 <strong>Jira</strong> — Project management<br>📁 <strong>Google Workspace / Notion</strong> — Docs & notes<br><br>Check the <em>IT Setup Guide</em> in Quick Links for full instructions!`
+  },
+  poc: {
+    patterns: ['point of contact', 'poc', 'who', 'buddy', 'mentor', 'contact', 'manager', 'hr'],
+    reply: `Your key contacts for onboarding:<br><br>👩‍💼 <strong>Sarah Lee</strong> — Your Direct Manager<br>&nbsp;&nbsp;&nbsp;sarah.lee@company.com<br><br>🤝 <strong>James Osei</strong> — Your Onboarding Buddy<br>&nbsp;&nbsp;&nbsp;james.osei@company.com<br><br>📋 <strong>HR Help Desk</strong> — For benefits &amp; admin<br>&nbsp;&nbsp;&nbsp;hr@company.com | Ext. 4200`
+  },
+  review: {
+    patterns: ['review', 'performance', 'evaluation', 'appraisal', 'feedback', 'assessment'],
+    reply: `Your <strong>performance review timeline</strong>:<br><br>📅 <strong>30-day check-in</strong> — Informal chat with your manager<br>📅 <strong>60-day review</strong> — Goals alignment session<br>📅 <strong>90-day formal review</strong> — Full performance assessment<br><br>Reviews happen through our <em>HR Self-Service portal</em>. Your manager will send you a calendar invite for each one!`
+  },
+  benefit: {
+    patterns: ['benefit', 'health', 'insurance', 'dental', 'pension', 'vacation', 'pto', 'leave', 'pay'],
+    reply: `🎁 <strong>Your Benefits Package</strong>:<br><br>🏥 Comprehensive health, dental &amp; vision<br>🌴 20 days PTO + 10 public holidays<br>💰 401(k) with 5% company match<br>🎓 $3,000/year learning &amp; development budget<br>🏠 Flexible remote work policy<br>👶 16 weeks paid parental leave<br><br>Enrol via the <em>Benefits Portal</em> within your first 30 days!`
+  },
+  default: {
+    patterns: [],
+    reply: `Thanks for your question! As your <strong>Onboarding Buddy</strong>, I can help with:<br><br>🏢 Company mission &amp; values<br>🛠️ Tools &amp; environment setup<br>🤝 Your key contacts &amp; POC<br>📅 Review &amp; check-in timeline<br>🎁 Benefits &amp; perks<br><br>Try asking something like <em>"What are our core values?"</em> or <em>"How do I set up my tools?"</em>`
+  }
+};
+
+/** Return a timestamp string like "2:45 PM" */
+function timestamp() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+/** Append a message bubble to the chat thread */
+function appendMsg(who, html) {
+  const thread  = document.getElementById('chat-messages');
+  const row     = document.createElement('div');
+  row.className = 'msg-row' + (who === 'user' ? ' user-row' : '');
+
+  const initial = who === 'user' ? 'A' : 'B';
+  row.innerHTML = `
+    <div class="msg-avatar ${who === 'user' ? 'user' : 'bot'}">${initial}</div>
+    <div class="msg-content">
+      <div class="msg-bubble ${who === 'user' ? 'user' : 'bot'}">${html}</div>
+      <div class="msg-time">${timestamp()}</div>
+    </div>`;
+
+  thread.appendChild(row);
+  thread.scrollTop = thread.scrollHeight;
+}
+
+/** Show the animated typing indicator */
+function showTyping() {
+  const thread = document.getElementById('chat-messages');
+  const row    = document.createElement('div');
+  row.className = 'typing-row';
+  row.id = 'typing-indicator';
+  row.innerHTML = `
+    <div class="msg-avatar bot">B</div>
+    <div class="typing-bubble">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>`;
+  thread.appendChild(row);
+  thread.scrollTop = thread.scrollHeight;
+}
+
+/** Remove the typing indicator */
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+/** Find the best matching bot response for the user's text */
+function getBotReply(text) {
+  const t = text.toLowerCase();
+  for (const key in BOT_RESPONSES) {
+    if (key === 'default') continue;
+    if (BOT_RESPONSES[key].patterns.some(p => t.includes(p))) {
+      return BOT_RESPONSES[key].reply;
+    }
+  }
+  return BOT_RESPONSES.default.reply;
+}
+
+/** Core send logic — used by both text input and chips */
+function dispatch(text) {
+  if (!text.trim()) return;
+
+  appendMsg('user', text.trim());
+
+  // Simulate AI thinking delay (700–1300ms)
+  showTyping();
+  const delay = 700 + Math.random() * 600;
+  setTimeout(() => {
+    removeTyping();
+    appendMsg('bot', getBotReply(text));
+  }, delay);
+}
+
+/** Called by Send button and Enter key */
+function sendMessage() {
+  const inp = document.getElementById('chat-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  dispatch(val);
+}
+
+/** Called by quick-ask chip buttons */
+function sendChip(btn, text) {
+  dispatch(text);
+  btn.style.opacity = '0.4';
+  btn.disabled = true;
+}
+
+/* Auto-grow textarea */
+document.getElementById('chat-input').addEventListener('input', function () {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 110) + 'px';
+});
+
+
+/* ================================================================
+   2. ONBOARDING CHECKLIST + STEP STATE MACHINE
+================================================================ */
+
+/**
+ * taskState[stepIdx][taskIdx] = boolean (checked or not)
+ * 4 steps × 4 tasks each = 16 total tasks
+ */
+const taskState = [
+  [false, false, false, false],  // Step 0: Welcome
+  [false, false, false, false],  // Step 1: Culture
+  [false, false, false, false],  // Step 2: Tools
+  [false, false, false, false],  // Step 3: First Task
+];
+
+/** Whether a full step has been marked complete via the CTA button */
+const stepDone = [false, false, false, false];
+
+/** Current active (open) step */
+let activeStep = 0;
+
+/** Open/close a step accordion */
+function toggleStep(idx) {
+  const item = document.getElementById('step-' + idx);
+  item.classList.toggle('open');
+}
+
+/** Called when any sub-task checkbox changes */
+function onTaskChange(stepIdx, taskIdx, checkbox) {
+  taskState[stepIdx][taskIdx] = checkbox.checked;
+
+  // Visually strike through the task label
+  const taskItem = document.getElementById('task-' + stepIdx + '-' + taskIdx);
+  taskItem.classList.toggle('checked', checkbox.checked);
+
+  // Enable the "Mark Step Complete" button only when all 4 tasks are checked
+  const allDone = taskState[stepIdx].every(Boolean);
+  const btn = document.getElementById('btn-step-' + stepIdx);
+  btn.disabled = !allDone;
+
+  refreshProgress();
+}
+
+/** Called when the "Mark Step Complete" CTA button is clicked */
+function completeStep(idx) {
+  if (!taskState[idx].every(Boolean)) return;
+
+  stepDone[idx] = true;
+
+  const item   = document.getElementById('step-' + idx);
+  const chip   = document.getElementById('chip-' + idx);
+
+  // Mark visual state: done
+  item.classList.remove('active', 'open');
+  item.classList.add('done');
+  chip.className   = 'step-status-chip done';
+  chip.textContent = '✓ Complete';
+
+  // Disable the complete button
+  document.getElementById('btn-step-' + idx).disabled = true;
+  document.getElementById('btn-step-' + idx).textContent = '✓ Completed';
+
+  // Activate the next step if it exists and isn't already done
+  const nextIdx = idx + 1;
+  if (nextIdx < 4 && !stepDone[nextIdx]) {
+    const nextItem = document.getElementById('step-' + nextIdx);
+    const nextChip = document.getElementById('chip-' + nextIdx);
+    nextItem.classList.add('active', 'open');
+    nextChip.className   = 'step-status-chip active';
+    nextChip.textContent = 'In Progress';
+    activeStep = nextIdx;
+  }
+
+  refreshProgress();
+}
+
+/** Update all progress indicators to match current step state */
+function refreshProgress() {
+  const totalTasks = 16;  // 4 steps × 4 tasks
+  const doneTasks  = taskState.flat().filter(Boolean).length;
+  const doneSteps  = stepDone.filter(Boolean).length;
+
+  // Task-level progress percentage (drives bar fills)
+  const taskPct = Math.round((doneTasks / totalTasks) * 100);
+
+  // Step-level progress (drives milestone dots and header badge)
+  const stepPct = Math.round((doneSteps / 4) * 100);
+
+  /* ── Header mini-bar (task level) ── */
+  document.getElementById('header-bar-fill').style.width    = taskPct + '%';
+  document.getElementById('header-pct-label').textContent   = taskPct + '% complete';
+
+  /* ── Full progress bar (task level) ── */
+  document.getElementById('progress-full-fill').style.width = taskPct + '%';
+  document.getElementById('progress-pct').textContent       = taskPct + '%';
+
+  /* ── Header badge (step level) ── */
+  document.getElementById('progress-badge').textContent = doneSteps + ' / 4 done';
+
+  /* ── Milestone dots (step level) ── */
+  for (let i = 0; i < 4; i++) {
+    const dot        = document.getElementById('milestone-' + i);
+    const checkSvg   = dot.querySelector('.check-svg');
+    const numSpan    = dot.querySelector('.dot-num');
+
+    if (stepDone[i]) {
+      dot.classList.add('done');
+      dot.classList.remove('active');
+      checkSvg.style.display = 'block';
+      numSpan.style.display  = 'none';
+    } else if (i === activeStep) {
+      dot.classList.add('active');
+      dot.classList.remove('done');
+      checkSvg.style.display = 'none';
+      numSpan.style.display  = 'block';
+    } else {
+      dot.classList.remove('done', 'active');
+      checkSvg.style.display = 'none';
+      numSpan.style.display  = 'block';
+    }
+  }
+
+  /* ── Milestone connector track width ── */
+  // Track spans from milestone 1 to milestone 4 (75% of row width)
+  // Each completed step fills 33.33% of the track
+  const trackPct = doneSteps === 0 ? 0
+    : doneSteps === 1 ? 25
+    : doneSteps === 2 ? 50
+    : doneSteps === 3 ? 75
+    : 75;  // full track at 4/4
+
+  document.getElementById('milestone-track').style.width = trackPct + '%';
+}
+
+/* ── Initial render — set Step 1 as active ── */
+(function init() {
+  document.getElementById('milestone-0').classList.add('active');
+})();
+
+</script>
+
+</body>
+</html>
